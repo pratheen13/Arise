@@ -1,40 +1,36 @@
-# Arise — full native Android app
+# ARISE
 
-No WebView, no bundled web assets. This is a real Kotlin + Jetpack Compose app that
-reimplements the reference app's own UI and game logic natively — same screens (Hunter,
-Quests, Connect, Rank), same rank table, same XP/level/quest-target formulas, same colour
-palette — reverse-engineered directly out of your ARISE-Android-v2.apk bundle. `hero.png`
-from that bundle is the character art here too.
+Native Android fitness RPG inspired by Solo Leveling. Current version: 4.3. Package ID: com.arise.myapp1.
 
-## Open and build
+## Android app
 
-Android Studio → **Open** → this `AriseNative` folder → sync → **Run** on a real phone.
-Emulators have no real proximity sensor, accelerometer, or GPS.
+Kotlin and Jetpack Compose UI, six rank appearances, daily exercise quests, illustrated completion dialogs, local XP, and Health Connect steps/distance imports. Samsung Health-only mode filters by the Samsung Health source; it is not guaranteed to be watch-only. When recorded distance is unavailable, the app labels its 0.70 m-per-step estimate. Repetitions are self-reported.
 
-## Game logic (matched to your original, not reinvented)
+Requires Android 9+ and an available Health Connect provider. On supported newer phones Health Connect is built in. Samsung/watch activity must first be shared by the companion app. Imports happen on return and while the app is open, not continuously in the background.
 
-- Level = `min(100, 1 + floor(xp / 200))`
-- Ranks: E Awakening(1) · D Rising hunter(10) · C Dungeon challenger(25) · B Elite hunter(45) · A Master hunter(70) · S Shadow monarch(100)
-- Quest targets scale from day 0 → day 99: reps 5→100, distance 0.5→10 km, steps 1,000→10,000
-- +40 XP per newly-cleared task, 5 tasks/day (push-ups, sit-ups, squats, distance, steps)
-- Phone vs. Health Connect signals never add — the larger of the two always wins (`HunterState.withSignals`)
+## Build
 
-## Real sensors behind every screen
+Install JDK 17 and Android SDK platform 36. Open this folder in Android Studio, which can create local.properties for your SDK path.
 
-| Quest task | Native source |
-|---|---|
-| Push-ups | `TYPE_PROXIMITY` — phone flat on floor, face near→far = one rep |
-| Sit-ups | Accelerometer tilt angle vs. a calibrated baseline |
-| Squats | Calibrated accelerometer-magnitude dip→rise |
-| Steps | `TYPE_STEP_COUNTER`, daily baseline persisted so it survives reboots |
-| Distance | Fused location; haversine + accuracy/speed filtering ported from your own JS |
-| Watch data | Health Connect aggregate read, with real contributing-app names |
+Run `./gradlew assembleDebug testDebugUnitTest` (Windows: `gradlew.bat assembleDebug testDebugUnitTest`). The debug APK is in app/build/outputs/apk/debug/.
 
-## Files
+Debug builds use your local Android debug signing key. They cannot update the previously delivered APK unless built with its original private signing key. Preserve the original signing key privately; it is deliberately excluded from this repository.
 
-- `HunterState.kt` — state, persistence, and every formula above
-- `StepEngine.kt` / `RepEngine.kt` / `GpsEngine.kt` / `HealthBridge.kt` — the sensor layer
-- `AriseViewModel.kt` — wires state + sensors together
-- `MainActivity.kt` — permissions + root layout
-- `ui/Theme.kt` — palette (`#08060E` / `#A944EF` / `#7CE9C8`) and the character stage
-- `ui/Screens.kt` — Hunter, Quests, Connect, Rank, nav, session modal, toast
+For a signed release, set ARISE_KEYSTORE, ARISE_STORE_PASSWORD, ARISE_KEY_ALIAS, and ARISE_KEY_PASSWORD in your environment, then run `./gradlew assembleRelease`. Without those variables a release is unsigned. Never commit signing material.
+
+## Contents
+
+- app/src/main: active Kotlin app and original artwork assets.
+- app/src/test: progression and distance tests.
+- docs: version notes and data-source limitations.
+
+
+
+## Validation and limitations
+
+The latest local build and 13 unit tests passed. The Kotlin app installed in an emulator, but complete visual testing was interrupted by an emulator System UI freeze. Phone/watch synchronization and the reported count difference still require real-device verification. This is a personal test app, not a production-certified tracker.
+
+Health data remains on device. No account or upload service is implemented. Clearing app storage deletes local progress.
+
+Artwork was AI-generated from user-provided visual references. ARISE is an unofficial fan project; no affiliation with Solo Leveling or its rights holders is claimed. No third-party artwork rights or redistribution license is granted by this repository.
+

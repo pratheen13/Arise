@@ -1,0 +1,9 @@
+ARISE 4.3
+Application ID: com.arise.myapp1
+Version code: 7
+
+The installable package ID now matches the requested Play Console app. Kotlin source namespace remains com.arise.hunter; it does not determine the installed package ID.
+
+This package installs separately from the previous com.arise.hunter app and does not automatically inherit its local progress or Health Connect permissions.
+
+Release APK and AAB use the existing private ARISE signing key. If Play Console has an established upload certificate, that certificate must match the signing key. Private signing material is not included in the source folder.

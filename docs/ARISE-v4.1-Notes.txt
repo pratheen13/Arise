@@ -1,0 +1,9 @@
+ARISE Kotlin 4.1 — distance fix
+
+Install ARISE-Kotlin-v4.1.apk over version 4.0; local progress is preserved.
+
+Distance now imports the full daily Health Connect DistanceRecord total without requiring exercise-session records or a matching source app. Only Steps and Distance read permissions are requested.
+
+When no positive recorded distance is available but steps are available, ARISE estimates distance using 0.70 metres per step. Home, Quests and Activity label that value as estimated. The Activity page explains the assumption. This is not GPS-measured distance and may differ from your real stride. A positive recorded distance replaces the estimate; the two are never added together. Both imported and estimated distance count toward the distance quest. Total imported distance may include activities other than walking/running.
+
+After installing, open Profile to allow distance access if needed, then open Activity and tap Refresh activity.
